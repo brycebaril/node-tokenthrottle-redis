@@ -30,7 +30,7 @@ test("throttle", function (t) {
 
   var redisClient = redis.createClient()
 
-  var throttle = redisThrottle({rate: 3}, redisClient)
+  var throttle = redisThrottle({rate: 3, expiry: 6000}, redisClient)
 
   var i = 0
   while (i++ < 3) {
@@ -52,7 +52,6 @@ test("throttle", function (t) {
     throttle.rateLimit("test", function (err, limited) {
       t.notOk(err, "No error")
       t.notOk(limited, "Throttle should be lifted.")
-      redisClient.del("test")
       redisClient.quit(function () {
         t.ok(1, "redis client exited")
       })

@@ -1,5 +1,5 @@
 {
-  "name": "node-tokenthrottle-redis",
+  "name": "tokenthrottle-redis",
   "version": "1.0.0",
   "description": "A Redis-backed tokenthrottle implementation. See http://npm.im/tokenthrottle",
   "main": "index.js",
