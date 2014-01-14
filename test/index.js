@@ -138,3 +138,35 @@ test("throttle multi-client", function (t) {
     })
   }, 400)
 })
+
+test("Override", function (t) {
+  t.plan(9)
+  var redisClient = redis.createClient()
+
+  var throttle = redisThrottle({
+    rate: 3,
+    burst: 3,
+    overrides: {
+      test: {rate: 0, burst: 0}
+    }
+  }, redisClient)
+  var i = 0
+  while (i++ < 3) {
+    // This is so much cleaner with setImmediate... *sigh 0.8.x*
+    setTimeout(function () {
+      throttle.rateLimit("test", function (err, limited) {
+        t.notOk(err)
+        t.notOk(limited, "Not throttled yet")
+      })
+    }, i * 10)
+  }
+  setTimeout(function () {
+    throttle.rateLimit("test", function (err, limited) {
+      t.notOk(err)
+      t.notOk(limited, "This one never gets throttled.")
+      redisClient.quit(function () {
+        t.ok(1, "redis client exited")
+      })
+    })
+  }, 50)
+})
