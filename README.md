@@ -3,9 +3,6 @@ Redis TokenThrottle
 
 [![NPM](https://nodei.co/npm/tokenthrottle-redis.png)](https://nodei.co/npm/tokenthrottle-redis/)
 
-[![david-dm](https://david-dm.org/brycebaril/node-tokenthrottle-redis.png)](https://david-dm.org/brycebaril/node-tokenthrottle-redis/)
-[![david-dm](https://david-dm.org/brycebaril/node-tokenthrottle-redis/dev-status.png)](https://david-dm.org/brycebaril/node-tokenthrottle-redis#info=devDependencies/)
-
 A Redis-backed implementation of [tokenthrottle](http://npm.im/tokenthrottle)
 
 Simply wraps [tokenthrottle](http://npm.im/tokenthrottle) with a Redis back-end, so you can use it across multiple servers/processes.
