@@ -1,8 +1,10 @@
-module.exports = redisThrottle
-module.exports.RedisTable = RedisTable
+'use strict';
 
-var Throttle = require("tokenthrottle")
-var redis = require("redis")
+module.exports = redisThrottle;
+module.exports.RedisTable = RedisTable;
+
+var Throttle = require('tokenthrottle');
+var redis = require('redis');
 
 /**
  * A npm.im/tokenthrottle implementation on top of Redis
@@ -13,9 +15,9 @@ var redis = require("redis")
  * @return {TokenThrottle}           A token throttle backed by Redis
  */
 function redisThrottle(options, redisClient) {
-  if (!options) throw new Error("Please supply required options.")
-  options.tokensTable = RedisTable(redisClient, options)
-  return Throttle(options)
+    if (!options) throw new Error('Please supply required options.');
+    options.tokensTable = new RedisTable(redisClient, options);
+    return new Throttle(options);
 }
 
 /**
@@ -26,25 +28,25 @@ function redisThrottle(options, redisClient) {
  *                          - prefix: A string to prefix all token entries with (default 'redisThrottle')
  */
 function RedisTable(redisClient, options) {
-  if (!(this instanceof RedisTable)) return new RedisTable(redisClient, options)
-  this.client = redisClient || redis.createClient()
-  options = options || {}
-  this.expiry = options.expiry
-  this.prefix = options.prefix || "redisThrottle"
+    if (!(this instanceof RedisTable)) return new RedisTable(redisClient, options);
+    this.client = redisClient || redis.createClient();
+    options = options || {};
+    this.expiry = options.expiry;
+    this.prefix = options.prefix || 'redisThrottle';
 }
 
 RedisTable.prototype._key = function (key) {
-  return [this.prefix, key].join("~")
-}
+    return [this.prefix, key].join(':');
+};
 
 RedisTable.prototype.get = function (key, cb) {
-  var myKey = this._key(key)
-  this.client.hgetall(myKey, cb)
-  if (this.expiry) this.client.expire(myKey, this.expiry)
-}
+    var myKey = this._key(key);
+    this.client.hgetall(myKey, cb);
+    if (this.expiry) this.client.expire(myKey, this.expiry);
+};
 
 RedisTable.prototype.put = function (key, value, cb) {
-  var myKey = this._key(key)
-  this.client.hmset(myKey, value, cb)
-  if (this.expiry) this.client.expire(myKey, this.expiry)
-}
+    var myKey = this._key(key);
+    this.client.hmset(myKey, value, cb);
+    if (this.expiry) this.client.expire(myKey, this.expiry);
+};
